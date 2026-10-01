@@ -1,290 +1,357 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-TW" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>對數與指數函數圖形對稱性總整理</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        :root {
-            --primary: #4f46e5;
-            --background: #f8fafc;
-            --card-bg: #ffffff;
-            --text: #1e293b;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background-color: var(--background);
-            color: var(--text);
-            margin: 0;
-            padding: 20px;
-            line-height: 1.6;
-        }
-
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
-        h1 {
-            text-align: center;
-            color: var(--primary);
-            margin-bottom: 10px;
-        }
-
-        .subtitle {
-            text-align: center;
-            color: #64748b;
-            margin-bottom: 30px;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-        }
-
-        @media (min-width: 768px) {
-            .grid {
-                grid-template-columns: 1fr 1fr;
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#121212',
+                        darkCard: '#1e1e1e',
+                        darkBorder: '#2d2d2d',
+                        logBase: '#22c55e',   // 亮綠
+                        logY: '#ef4444',      // 亮紅
+                        logX: '#3b82f6',      // 亮藍
+                        logOrigin: '#a855f7', // 亮紫
+                        expBase: '#f59e0b',   // 亮黃/金
+                        expY: '#06b6d4'       // 青色
+                    }
+                }
             }
         }
-
-        .card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    </script>
+    <style>
+        body {
+            background-color: #121212;
+            color: #e2e8f0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
-
-        .full-width {
-            grid-column: 1 / -1;
-        }
-
-        canvas {
-            width: 100% !important;
-            max-height: 450px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1fr solid #e2e8f0;
-        }
-
-        th {
-            background-color: #f1f5f9;
-            color: #334155;
-        }
-
-        tr:hover {
-            background-color: #f8fafc;
-        }
-
-        .tag {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-weight: bold;
-            font-size: 0.9em;
-        }
-
-        .tip-box {
-            background-color: #e0e7ff;
-            border-left: 4px solid var(--primary);
-            padding: 15px;
-            border-radius: 0 8px 8px 0;
-            margin-top: 15px;
-        }
+        .katex { font-size: 1.1em; }
     </style>
 </head>
-<body>
+<body class="min-h-screen p-3 md:p-6 bg-darkBg text-slate-200">
+    <div class="max-w-4xl mx-auto space-y-6">
+        <header class="text-center py-4 border-b border-darkBorder">
+            <h1 class="text-2xl md:text-3xl font-bold text-indigo-400 mb-2">對數與指數函數圖形對稱性</h1>
+            <p class="text-sm text-slate-400">完整整理直角坐標系下的對稱變換與性質分析</p>
+        </header>
 
-<div class="container">
-    <h1>對數與指數函數對稱圖形整理</h1>
-    <p class="subtitle">涵蓋圖片中的所有函數圖形方向與轉換規則</p>
-
-    <div class="grid">
-        <!-- 圖形展示區 -->
-        <div class="card full-width">
-            <h2>坐標軸圖形對照</h2>
-            <canvas id="functionChart"></canvas>
-        </div>
-
-        <!-- 對數函數對稱規則 -->
-        <div class="card">
-            <h2>對數函數 $y = \log_{10}(x)$ 的對稱</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>對稱關係</th>
-                        <th>函數解析式</th>
-                        <th>圖形特徵與象限</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>基準原函數</strong></td>
-                        <td><span class="tag" style="background:#22c55e; color:white;">$y = \log_{10}(x)$</span></td>
-                        <td>第一、四象限 (單調遞增)</td>
-                    </tr>
-                    <tr>
-                        <td><strong>對稱 y 軸</strong> (左右翻轉)</td>
-                        <td><span class="tag" style="background:#ef4444; color:white;">$y = \log_{10}(-x)$</span></td>
-                        <td>第二、三象限 (單調遞減)</td>
-                    </tr>
-                    <tr>
-                        <td><strong>對稱 x 軸</strong> (上下翻轉)</td>
-                        <td><span class="tag" style="background:#3b82f6; color:white;">$y = -\log_{10}(x)$</span><br><small style="color:#64748b;">(等同 $y = \log_{\frac{1}{10}}(x)$)</small></td>
-                        <td>第一、四象限 (單調遞減)</td>
-                    </tr>
-                    <tr>
-                        <td><strong>對稱原點</strong> (上下左右翻轉)</td>
-                        <td><span class="tag" style="background:#a855f7; color:white;">$y = -\log_{10}(-x)$</span><br><small style="color:#64748b;">(等同 $y = \log_{\frac{1}{10}}(-x)$)</small></td>
-                        <td>第二、三象限 (單調遞增)</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- 指數與對數互為反函數 -->
-        <div class="card">
-            <h2>指數函數與對稱 $y = x$</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>函數類型</th>
-                        <th>函數解析式</th>
-                        <th>與對數函數的關係</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>基準指數函數</strong></td>
-                        <td><span class="tag" style="background:#f59e0b; color:white;">$y = 10^x$</span></td>
-                        <td>與 $y=\log_{10}(x)$ 關於直線 $y=x$ 對稱（互為反函數）</td>
-                    </tr>
-                    <tr>
-                        <td><strong>對稱 y 軸指數</strong></td>
-                        <td><span class="tag" style="background:#06b6d4; color:white;">$y = \left(\frac{1}{10}\right)^x$</span><br><small style="color:#64748b;">(等同 $y = 10^{-x}$)</small></td>
-                        <td>與 $y = 10^x$ 關於 y 軸對稱</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <div class="tip-box">
-                <strong>快速記憶口訣：</strong>
-                <ul>
-                    <li><strong>對稱 y 軸（左右變）</strong>：改內部 $x$ 的正負號 $\rightarrow (-x)$</li>
-                    <li><strong>對稱 x 軸（上下變）</strong>：改外部 $y$ 的正負號 $\rightarrow -f(x)$</li>
-                    <li><strong>對稱原點（旋轉180°）</strong>：內部外部同時加負號 $\rightarrow -f(-x)$</li>
-                    <li><strong>對稱直線 $y=x$（反函數）</strong>：$x$ 與 $y$ 位置互換</li>
-                </ul>
+        <section class="bg-darkCard p-4 md:p-6 rounded-2xl border border-darkBorder shadow-xl">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
+                <h2 class="text-lg font-semibold text-white flex items-center gap-2">
+                    <span class="w-2 h-5 bg-indigo-500 rounded-full inline-block"></span>
+                    互動函數圖形畫布
+                </h2>
+                <div class="text-xs text-slate-400">勾選下方按鈕可選擇性顯示函數，避免線條交疊</div>
             </div>
-        </div>
+
+            <!-- Canvas Container -->
+            <div class="relative w-full h-[320px] md:h-[400px] bg-[#181818] rounded-xl p-2 border border-darkBorder mb-4">
+                <canvas id="functionChart"></canvas>
+            </div>
+
+            <!-- Function Toggle Switches -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs md:text-sm">
+                <label class="flex items-center space-x-2 bg-[#262626] p-2.5 rounded-lg border border-darkBorder cursor-pointer hover:bg-[#303030] transition">
+                    <input type="checkbox" id="chk-logBase" checked class="w-4 h-4 accent-green-500 rounded" onchange="updateChart()">
+                    <span class="w-3 h-3 rounded-full bg-logBase inline-block"></span>
+                    <span class="truncate">\(y = \log_{10}(x)\)</span>
+                </label>
+
+                <label class="flex items-center space-x-2 bg-[#262626] p-2.5 rounded-lg border border-darkBorder cursor-pointer hover:bg-[#303030] transition">
+                    <input type="checkbox" id="chk-logY" class="w-4 h-4 accent-red-500 rounded" onchange="updateChart()">
+                    <span class="w-3 h-3 rounded-full bg-logY inline-block"></span>
+                    <span class="truncate">\(y = \log_{10}(-x)\)</span>
+                </label>
+
+                <label class="flex items-center space-x-2 bg-[#262626] p-2.5 rounded-lg border border-darkBorder cursor-pointer hover:bg-[#303030] transition">
+                    <input type="checkbox" id="chk-logX" class="w-4 h-4 accent-blue-500 rounded" onchange="updateChart()">
+                    <span class="w-3 h-3 rounded-full bg-logX inline-block"></span>
+                    <span class="truncate">\(y = -\log_{10}(x)\)</span>
+                </label>
+
+                <label class="flex items-center space-x-2 bg-[#262626] p-2.5 rounded-lg border border-darkBorder cursor-pointer hover:bg-[#303030] transition">
+                    <input type="checkbox" id="chk-logOrigin" class="w-4 h-4 accent-purple-500 rounded" onchange="updateChart()">
+                    <span class="w-3 h-3 rounded-full bg-logOrigin inline-block"></span>
+                    <span class="truncate">\(y = -\log_{10}(-x)\)</span>
+                </label>
+
+                <label class="flex items-center space-x-2 bg-[#262626] p-2.5 rounded-lg border border-darkBorder cursor-pointer hover:bg-[#303030] transition">
+                    <input type="checkbox" id="chk-expBase" class="w-4 h-4 accent-amber-500 rounded" onchange="updateChart()">
+                    <span class="w-3 h-3 rounded-full bg-expBase inline-block"></span>
+                    <span class="truncate">\(y = 10^x\)</span>
+                </label>
+
+                <label class="flex items-center space-x-2 bg-[#262626] p-2.5 rounded-lg border border-darkBorder cursor-pointer hover:bg-[#303030] transition">
+                    <input type="checkbox" id="chk-expY" class="w-4 h-4 accent-cyan-500 rounded" onchange="updateChart()">
+                    <span class="w-3 h-3 rounded-full bg-expY inline-block"></span>
+                    <span class="truncate">\(y = (1/10)^x\)</span>
+                </label>
+            </div>
+        </section>
+
+        <section class="bg-indigo-950/40 border border-indigo-800/50 p-4 md:p-5 rounded-2xl">
+            <h3 class="text-indigo-300 font-semibold mb-2 flex items-center gap-2">
+                💡 對稱變換快速記憶口訣
+            </h3>
+            <ul class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs md:text-sm text-slate-300">
+                <li class="bg-indigo-900/30 p-2 rounded border border-indigo-800/30">
+                    <strong class="text-indigo-200">對稱 y 軸 (左右變)：</strong> 內部 \(x\) 改負號 \(\rightarrow x \to -x\)
+                </li>
+                <li class="bg-indigo-900/30 p-2 rounded border border-indigo-800/30">
+                    <strong class="text-indigo-200">對稱 x 軸 (上下變)：</strong> 全體加負號 \(\rightarrow y \to -f(x)\)
+                </li>
+                <li class="bg-indigo-900/30 p-2 rounded border border-indigo-800/30">
+                    <strong class="text-indigo-200">對稱原點 (中心點對稱)：</strong> 內部全體皆加負號 \(\rightarrow -f(-x)\)
+                </li>
+                <li class="bg-indigo-900/30 p-2 rounded border border-indigo-800/30">
+                    <strong class="text-indigo-200">對稱 \(y = x\) (反函數)：</strong> \(x\) 與 \(y\) 變數對調 \(\rightarrow y = 10^x\)
+                </li>
+            </ul>
+        </section>
+
+        <section class="bg-darkCard p-4 md:p-6 rounded-2xl border border-darkBorder shadow-xl overflow-x-auto">
+            <h2 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                <span class="w-2 h-5 bg-emerald-500 rounded-full inline-block"></span>
+                各方向對數函數性質對照表
+            </h2>
+            <table class="w-full text-left text-xs md:text-sm border-collapse min-w-[600px]">
+                <thead>
+                    <tr class="border-b border-darkBorder text-slate-400 bg-[#262626]">
+                        <th class="p-3">對稱關係</th>
+                        <th class="p-3">函數解析式</th>
+                        <th class="p-3">定義域</th>
+                        <th class="p-3">值域</th>
+                        <th class="p-3">遞增/遞減</th>
+                        <th class="p-3">通過定點</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-darkBorder text-slate-300">
+                    <tr class="hover:bg-[#252525] transition">
+                        <td class="p-3 font-medium text-emerald-400">基準原函數</td>
+                        <td class="p-3 font-mono">\(y = \log_{10}(x)\)</td>
+                        <td class="p-3">\(x > 0\)</td>
+                        <td class="p-3">\(\mathbb{R}\)</td>
+                        <td class="p-3 text-emerald-400">單調遞增</td>
+                        <td class="p-3 font-mono">(1, 0)</td>
+                    </tr>
+                    <tr class="hover:bg-[#252525] transition">
+                        <td class="p-3 font-medium text-red-400">對稱 y 軸</td>
+                        <td class="p-3 font-mono">\(y = \log_{10}(-x)\)</td>
+                        <td class="p-3">\(x < 0\)</td>
+                        <td class="p-3">\(\mathbb{R}\)</td>
+                        <td class="p-3 text-red-400">單調遞減</td>
+                        <td class="p-3 font-mono">(-1, 0)</td>
+                    </tr>
+                    <tr class="hover:bg-[#252525] transition">
+                        <td class="p-3 font-medium text-blue-400">對稱 x 軸</td>
+                        <td class="p-3 font-mono">\(y = -\log_{10}(x)\)</td>
+                        <td class="p-3">\(x > 0\)</td>
+                        <td class="p-3">\(\mathbb{R}\)</td>
+                        <td class="p-3 text-red-400">單調遞減</td>
+                        <td class="p-3 font-mono">(1, 0)</td>
+                    </tr>
+                    <tr class="hover:bg-[#252525] transition">
+                        <td class="p-3 font-medium text-purple-400">對稱原點</td>
+                        <td class="p-3 font-mono">\(y = -\log_{10}(-x)\)</td>
+                        <td class="p-3">\(x < 0\)</td>
+                        <td class="p-3">\(\mathbb{R}\)</td>
+                        <td class="p-3 text-emerald-400">單調遞增</td>
+                        <td class="p-3 font-mono">(-1, 0)</td>
+                    </tr>
+                    <tr class="hover:bg-[#252525] transition">
+                        <td class="p-3 font-medium text-amber-400">對稱 \(y=x\) (指數)</td>
+                        <td class="p-3 font-mono">\(y = 10^x\)</td>
+                        <td class="p-3">\(\mathbb{R}\)</td>
+                        <td class="p-3">\(y > 0\)</td>
+                        <td class="p-3 text-emerald-400">單調遞增</td>
+                        <td class="p-3 font-mono">(0, 1)</td>
+                    </tr>
+                    <tr class="hover:bg-[#252525] transition">
+                        <td class="p-3 font-medium text-cyan-400">對稱y軸指數</td>
+                        <td class="p-3 font-mono">\(y = (1/10)^x\)</td>
+                        <td class="p-3">\(\mathbb{R}\)</td>
+                        <td class="p-3">\(y > 0\)</td>
+                        <td class="p-3 text-red-400">單調遞減</td>
+                        <td class="p-3 font-mono">(0, 1)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
     </div>
-</div>
 
-<script>
-    // 繪製函數圖形
-    const ctx = document.getElementById('functionChart').getContext('2d');
-    
-    // 產生數據點
-    const generatePoints = (fn, minX, maxX, step = 0.05) => {
-        const points = [];
-        for (let x = minX; x <= maxX; x += step) {
-            const y = fn(x);
-            if (!isNaN(y) && isFinite(y) && Math.abs(y) <= 10) {
-                points.push({x: x, y: y});
-            } else {
-                points.push({x: x, y: null});
+    <script>
+        let myChart = null;
+
+        // 生成數據點
+        function generateData(fn, minX, maxX, step = 0.05) {
+            const data = [];
+            for (let x = minX; x <= maxX; x += step) {
+                const roundedX = Math.round(x * 100) / 100;
+                const y = fn(roundedX);
+                if (!isNaN(y) && isFinite(y) && Math.abs(y) <= 8) {
+                    data.push({ x: roundedX, y: y });
+                }
             }
+            return data;
         }
-        return points;
-    };
 
-    const chart = new Chart(ctx, {
-        type: 'scatter',
-        data: {
-            datasets: [
-                {
-                    label: 'y = log₁₀(x)',
-                    data: generatePoints(x => Math.log10(x), 0.01, 10),
-                    borderColor: '#22c55e',
-                    showLine: true,
-                    pointRadius: 0
-                },
-                {
-                    label: 'y = log₁₀(-x) [對稱y軸]',
-                    data: generatePoints(x => Math.log10(-x), -10, -0.01),
-                    borderColor: '#ef4444',
-                    showLine: true,
-                    pointRadius: 0
-                },
-                {
-                    label: 'y = -log₁₀(x) [對稱x軸]',
-                    data: generatePoints(x => -Math.log10(x), 0.01, 10),
-                    borderColor: '#3b82f6',
-                    showLine: true,
-                    pointRadius: 0
-                },
-                {
-                    label: 'y = -log₁₀(-x) [對稱原點]',
-                    data: generatePoints(x => -Math.log10(-x), -10, -0.01),
-                    borderColor: '#a855f7',
-                    showLine: true,
-                    pointRadius: 0
-                },
-                {
-                    label: 'y = 10ˣ',
-                    data: generatePoints(x => Math.pow(10, x), -5, 1),
-                    borderColor: '#f59e0b',
-                    showLine: true,
-                    borderDash: [5, 5],
-                    pointRadius: 0
-                },
-                {
-                    label: 'y = (1/10)ˣ',
-                    data: generatePoints(x => Math.pow(0.1, x), -1, 5),
-                    borderColor: '#06b6d4',
-                    showLine: true,
-                    borderDash: [5, 5],
-                    pointRadius: 0
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                x: {
-                    type: 'linear',
-                    position: 'center',
-                    min: -5,
-                    max: 5,
-                    title: { display: true, text: 'X 軸' }
-                },
-                y: {
-                    type: 'linear',
-                    position: 'center',
-                    min: -5,
-                    max: 5,
-                    title: { display: true, text: 'Y 軸' }
-                }
+        // 所有函數的定義數據
+        const datasetsConfig = {
+            logBase: {
+                label: 'y = log₁₀(x)',
+                borderColor: '#22c55e',
+                data: generateData(x => Math.log10(x), 0.001, 6)
             },
-            plugins: {
-                legend: {
-                    position: 'bottom'
-                }
+            logY: {
+                label: 'y = log₁₀(-x)',
+                borderColor: '#ef4444',
+                data: generateData(x => Math.log10(-x), -6, -0.001)
+            },
+            logX: {
+                label: 'y = -log₁₀(x)',
+                borderColor: '#3b82f6',
+                data: generateData(x => -Math.log10(x), 0.001, 6)
+            },
+            logOrigin: {
+                label: 'y = -log₁₀(-x)',
+                borderColor: '#a855f7',
+                data: generateData(x => -Math.log10(-x), -6, -0.001)
+            },
+            expBase: {
+                label: 'y = 10ˣ',
+                borderColor: '#f59e0b',
+                borderDash: [4, 4],
+                data: generateData(x => Math.pow(10, x), -5, 1)
+            },
+            expY: {
+                label: 'y = (1/10)ˣ',
+                borderColor: '#06b6d4',
+                borderDash: [4, 4],
+                data: generateData(x => Math.pow(0.1, x), -1, 5)
             }
+        };
+
+        function initChart() {
+            const ctx = document.getElementById('functionChart').getContext('2d');
+            
+            myChart = new Chart(ctx, {
+                type: 'scatter',
+                data: { datasets: [] },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: { duration: 300 },
+                    scales: {
+                        x: {
+                            type: 'linear',
+                            position: 'center',
+                            min: -5,
+                            max: 5,
+                            grid: { color: '#2d2d2d' },
+                            ticks: { color: '#94a3b8', stepSize: 1 }
+                        },
+                        y: {
+                            type: 'linear',
+                            position: 'center',
+                            min: -4,
+                            max: 4,
+                            grid: { color: '#2d2d2d' },
+                            ticks: { color: '#94a3b8', stepSize: 1 }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: (context) => `${context.dataset.label}: (${context.parsed.x}, ${context.parsed.y.toFixed(2)})`
+                            }
+                        }
+                    }
+                }
+            });
+
+            updateChart();
         }
-    });
-</script>
+
+        function updateChart() {
+            if (!myChart) return;
+
+            const activeDatasets = [];
+
+            if (document.getElementById('chk-logBase').checked) {
+                activeDatasets.push({
+                    label: datasetsConfig.logBase.label,
+                    data: datasetsConfig.logBase.data,
+                    borderColor: datasetsConfig.logBase.borderColor,
+                    showLine: true, pointRadius: 0, borderWidth: 2.5
+                });
+            }
+
+            if (document.getElementById('chk-logY').checked) {
+                activeDatasets.push({
+                    label: datasetsConfig.logY.label,
+                    data: datasetsConfig.logY.data,
+                    borderColor: datasetsConfig.logY.borderColor,
+                    showLine: true, pointRadius: 0, borderWidth: 2.5
+                });
+            }
+
+            if (document.getElementById('chk-logX').checked) {
+                activeDatasets.push({
+                    label: datasetsConfig.logX.label,
+                    data: datasetsConfig.logX.data,
+                    borderColor: datasetsConfig.logX.borderColor,
+                    showLine: true, pointRadius: 0, borderWidth: 2.5
+                });
+            }
+
+            if (document.getElementById('chk-logOrigin').checked) {
+                activeDatasets.push({
+                    label: datasetsConfig.logOrigin.label,
+                    data: datasetsConfig.logOrigin.data,
+                    borderColor: datasetsConfig.logOrigin.borderColor,
+                    showLine: true, pointRadius: 0, borderWidth: 2.5
+                });
+            }
+
+            if (document.getElementById('chk-expBase').checked) {
+                activeDatasets.push({
+                    label: datasetsConfig.expBase.label,
+                    data: datasetsConfig.expBase.data,
+                    borderColor: datasetsConfig.expBase.borderColor,
+                    borderDash: datasetsConfig.expBase.borderDash,
+                    showLine: true, pointRadius: 0, borderWidth: 2.5
+                });
+            }
+
+            if (document.getElementById('chk-expY').checked) {
+                activeDatasets.push({
+                    label: datasetsConfig.expY.label,
+                    data: datasetsConfig.expY.data,
+                    borderColor: datasetsConfig.expY.borderColor,
+                    borderDash: datasetsConfig.expY.borderDash,
+                    showLine: true, pointRadius: 0, borderWidth: 2.5
+                });
+            }
+
+            myChart.data.datasets = activeDatasets;
+            myChart.update();
+        }
+
+        window.onload = function() {
+            initChart();
+        };
+    </script>
 </body>
 </html>
