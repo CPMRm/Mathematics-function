@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>對數與指數函數圖形對稱性總整理</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --background: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #64748b;
+            margin-bottom: 30px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        @media (min-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        canvas {
+            width: 100% !important;
+            max-height: 450px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1fr solid #e2e8f0;
+        }
+
+        th {
+            background-color: #f1f5f9;
+            color: #334155;
+        }
+
+        tr:hover {
+            background-color: #f8fafc;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .tip-box {
+            background-color: #e0e7ff;
+            border-left: 4px solid var(--primary);
+            padding: 15px;
+            border-radius: 0 8px 8px 0;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>對數與指數函數對稱圖形整理</h1>
+    <p class="subtitle">涵蓋圖片中的所有函數圖形方向與轉換規則</p>
+
+    <div class="grid">
+        <!-- 圖形展示區 -->
+        <div class="card full-width">
+            <h2>坐標軸圖形對照</h2>
+            <canvas id="functionChart"></canvas>
+        </div>
+
+        <!-- 對數函數對稱規則 -->
+        <div class="card">
+            <h2>對數函數 $y = \log_{10}(x)$ 的對稱</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>對稱關係</th>
+                        <th>函數解析式</th>
+                        <th>圖形特徵與象限</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>基準原函數</strong></td>
+                        <td><span class="tag" style="background:#22c55e; color:white;">$y = \log_{10}(x)$</span></td>
+                        <td>第一、四象限 (單調遞增)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>對稱 y 軸</strong> (左右翻轉)</td>
+                        <td><span class="tag" style="background:#ef4444; color:white;">$y = \log_{10}(-x)$</span></td>
+                        <td>第二、三象限 (單調遞減)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>對稱 x 軸</strong> (上下翻轉)</td>
+                        <td><span class="tag" style="background:#3b82f6; color:white;">$y = -\log_{10}(x)$</span><br><small style="color:#64748b;">(等同 $y = \log_{\frac{1}{10}}(x)$)</small></td>
+                        <td>第一、四象限 (單調遞減)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>對稱原點</strong> (上下左右翻轉)</td>
+                        <td><span class="tag" style="background:#a855f7; color:white;">$y = -\log_{10}(-x)$</span><br><small style="color:#64748b;">(等同 $y = \log_{\frac{1}{10}}(-x)$)</small></td>
+                        <td>第二、三象限 (單調遞增)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 指數與對數互為反函數 -->
+        <div class="card">
+            <h2>指數函數與對稱 $y = x$</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>函數類型</th>
+                        <th>函數解析式</th>
+                        <th>與對數函數的關係</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>基準指數函數</strong></td>
+                        <td><span class="tag" style="background:#f59e0b; color:white;">$y = 10^x$</span></td>
+                        <td>與 $y=\log_{10}(x)$ 關於直線 $y=x$ 對稱（互為反函數）</td>
+                    </tr>
+                    <tr>
+                        <td><strong>對稱 y 軸指數</strong></td>
+                        <td><span class="tag" style="background:#06b6d4; color:white;">$y = \left(\frac{1}{10}\right)^x$</span><br><small style="color:#64748b;">(等同 $y = 10^{-x}$)</small></td>
+                        <td>與 $y = 10^x$ 關於 y 軸對稱</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="tip-box">
+                <strong>快速記憶口訣：</strong>
+                <ul>
+                    <li><strong>對稱 y 軸（左右變）</strong>：改內部 $x$ 的正負號 $\rightarrow (-x)$</li>
+                    <li><strong>對稱 x 軸（上下變）</strong>：改外部 $y$ 的正負號 $\rightarrow -f(x)$</li>
+                    <li><strong>對稱原點（旋轉180°）</strong>：內部外部同時加負號 $\rightarrow -f(-x)$</li>
+                    <li><strong>對稱直線 $y=x$（反函數）</strong>：$x$ 與 $y$ 位置互換</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 繪製函數圖形
+    const ctx = document.getElementById('functionChart').getContext('2d');
+    
+    // 產生數據點
+    const generatePoints = (fn, minX, maxX, step = 0.05) => {
+        const points = [];
+        for (let x = minX; x <= maxX; x += step) {
+            const y = fn(x);
+            if (!isNaN(y) && isFinite(y) && Math.abs(y) <= 10) {
+                points.push({x: x, y: y});
+            } else {
+                points.push({x: x, y: null});
+            }
+        }
+        return points;
+    };
+
+    const chart = new Chart(ctx, {
+        type: 'scatter',
+        data: {
+            datasets: [
+                {
+                    label: 'y = log₁₀(x)',
+                    data: generatePoints(x => Math.log10(x), 0.01, 10),
+                    borderColor: '#22c55e',
+                    showLine: true,
+                    pointRadius: 0
+                },
+                {
+                    label: 'y = log₁₀(-x) [對稱y軸]',
+                    data: generatePoints(x => Math.log10(-x), -10, -0.01),
+                    borderColor: '#ef4444',
+                    showLine: true,
+                    pointRadius: 0
+                },
+                {
+                    label: 'y = -log₁₀(x) [對稱x軸]',
+                    data: generatePoints(x => -Math.log10(x), 0.01, 10),
+                    borderColor: '#3b82f6',
+                    showLine: true,
+                    pointRadius: 0
+                },
+                {
+                    label: 'y = -log₁₀(-x) [對稱原點]',
+                    data: generatePoints(x => -Math.log10(-x), -10, -0.01),
+                    borderColor: '#a855f7',
+                    showLine: true,
+                    pointRadius: 0
+                },
+                {
+                    label: 'y = 10ˣ',
+                    data: generatePoints(x => Math.pow(10, x), -5, 1),
+                    borderColor: '#f59e0b',
+                    showLine: true,
+                    borderDash: [5, 5],
+                    pointRadius: 0
+                },
+                {
+                    label: 'y = (1/10)ˣ',
+                    data: generatePoints(x => Math.pow(0.1, x), -1, 5),
+                    borderColor: '#06b6d4',
+                    showLine: true,
+                    borderDash: [5, 5],
+                    pointRadius: 0
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: {
+                    type: 'linear',
+                    position: 'center',
+                    min: -5,
+                    max: 5,
+                    title: { display: true, text: 'X 軸' }
+                },
+                y: {
+                    type: 'linear',
+                    position: 'center',
+                    min: -5,
+                    max: 5,
+                    title: { display: true, text: 'Y 軸' }
+                }
+            },
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>
